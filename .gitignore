@@ -1,0 +1,5 @@
+windows-xp-data/
+storage/
+*.iso
+*.qcow2
+*.img
