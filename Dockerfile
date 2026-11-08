@@ -9,15 +9,18 @@ RUN if [ -f /run/network.sh ]; then \
     mkdir -p /storage /oem
 
 # Skrip optimasi otomatis Windows XP saat pertama kali boot (Fast RDP, Firewall, hemat CPU & RAM)
-COPY --chmod=755 oem/install.bat /oem/install.bat
-RUN unix2dos /oem/install.bat 2>/dev/null || sed -i 's/\r$//; s/$/\r/' /oem/install.bat
+COPY oem/install.bat /oem/install.bat
 
 # Startup hook Railway: deteksi otomatis KVM, SLIRP port-forwarding 3389, DNS, & dynamic $PORT
-COPY --chmod=755 start.sh /run/start.sh
-COPY --chmod=755 start.sh /start.sh
+COPY start.sh /run/start.sh
+COPY start.sh /start.sh
+
+RUN chmod +x /oem/install.bat /run/start.sh /start.sh && \
+    (unix2dos /oem/install.bat 2>/dev/null || sed -i 's/\r$//; s/$/\r/' /oem/install.bat)
 
 # Konfigurasi default Windows XP Professional SP3 yang dioptimalkan untuk Railway
 ENV VERSION="xp"
+ENV STORAGE="/storage"
 ENV USERNAME="root"
 ENV PASSWORD="root"
 ENV AUTOLOGIN="Y"
@@ -34,7 +37,8 @@ ENV AUDIO="Y"
 ENV LOSSY="Y"
 ENV PROTECT="Y"
 
-VOLUME /storage
+# Catatan: Jangan gunakan instruksi Docker VOLUME di sini karena ditolak oleh Railway builder.
+# Pasang Railway Volume dengan mount path /storage melalui dashboard Railway.
 
 # 3389 = Remote Desktop (RDP via Railway TCP Proxy)
 # 8006 = Web Viewer noVNC (Akses Browser via Railway Public Domain)
