@@ -6,7 +6,7 @@ services:
       VERSION: "xp"
       USERNAME: "root"
       PASSWORD: "root"
-      RAM_SIZE: "1G"
+      RAM_SIZE: "auto"
       CPU_CORES: "2"
       DISK_SIZE: "16G"
     ports:
